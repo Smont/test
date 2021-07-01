@@ -4,83 +4,72 @@
       <div class="container-repositorio">
         <div class="left">
           <figure class="user-img">
-            <img :src="usuario.avatar_url" :alt="usuario.name" />
+            <img :src="user.avatar_url" :alt="user.name" />
           </figure>
-          <h2 class="user-name">{{ usuario.name }}</h2>
+          <h2 class="user-name">{{ user.name }}</h2>
         </div>
 
         <div class="right">
-          <p class="user-number-repo">{{ usuario.public_repos }}</p>
+          <p class="user-number-repo">Repos: {{ user.public_repos }}</p>
         </div>
       </div>
     </header>
-    <!-- <main>
-      <div class="container-repos">
-        <div
-          class="container-repo"
-          v-for="repositorio of repositorios"
-          :key="repositorio.id"
-        >
-          <a
-            :href="repositorio.html_url"
-            :title="repositorio.name"
-            target="_blank"
+    <main>
+      <div class="repositorios ">
+        <div class="repositorios-item container-repos">
+          <div
+            class="row container-repo "
+            v-for="repositorio of repositorios"
+            :key="repositorio.id"
           >
-            <div class="repo-top">
-              <h3 class="repo-name">{{ repositorio.name }}</h3>
+            <div class="col">
+              <h3>{{ repositorio.name }}</h3>
+            </div>
+            <div class="col">
               <p class="repo-description">{{ repositorio.description }}</p>
             </div>
-            <div class="repo-bottom">
-              <p class="repo-updated">
-                {{ repositorio.updated_at }}
-              </p>
-              <p class="repo-forks">{{ repositorio.forks_count }}</p>
-              <p class="repo-watchers">{{ repositorio.watchers_count }}</p>
-            </div>
-          </a>
+            <div class="col">{{ repositorio.forks }}</div>
+            <div class="col">{{ repositorio.updated_at }}</div>
+          </div>
         </div>
       </div>
-    </main> -->
-    <app-pagination
-      :data="repos"
-      :total-pages="Math.ceil(repos.length / 4)"
-      :total="repos.length"
-      :per-page="10"
-      :currentPage="currentPage"
-      @pagechanged="onPageChange"
-    ></app-pagination>
+    </main>
   </div>
 </template>
 
 <script>
-import api from "./config/service";
-import { mapActions, mapGetters } from "vuex";
-import Pagination from "./components/Pagination";
-
+import Repositorios from "./config/Repositorios";
+import axios from "axios";
 export default {
   name: "app",
-  methods: {
-    ...mapActions(["loadRepositorios"]),
-    onPageChange(page) {
-      this.currentPage = page;
-    }
-  },
-  components: {
-    "app-pagination": Pagination
-  },
-  computed: {
-    ...mapGetters(["repos"])
-  },
   data() {
     return {
-      usuario: [],
-      currentPage: 1
+      repositorios: [],
+      user: []
     };
   },
   mounted() {
-    api.getUser().then(resposta => {
-      this.usuario = resposta.data;
-    });
+    this.listar();
+  },
+  methods: {
+    listar() {
+      Repositorios.listar()
+        .then(resposta => {
+          this.repositorios = resposta.data;
+          axios
+            .get("https://api.github.com/users/laravel")
+            .then(resposta => {
+              this.user = resposta.data;
+              console.log(user);
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
   }
 };
 </script>
@@ -90,7 +79,7 @@ export default {
   font-family: "Montserrat", sans-serif;
 }
 body {
-  margin: 0;
+  margin: 0 auto;
   outline: none;
 }
 
@@ -123,8 +112,8 @@ header {
 
   .user-number-repo {
     background: #ccc;
-    border-radius: 50%;
-    width: 32px;
+    border-radius: 3px;
+    width: 150px;
     text-align: center;
     padding: 3px;
     font-size: 14px;
@@ -143,6 +132,8 @@ a {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-around;
 }
 .container-repo {
   padding: 7px;
@@ -153,6 +144,7 @@ a {
   transition: all 0.5s ease;
   cursor: pointer;
   border: 2px solid transparent;
+  min-height: 200px;
 
   &:hover {
     border: 2px solid navy;

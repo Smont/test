@@ -1,71 +1,9 @@
 <template>
-  <div class="repositorios">
-    <div class="repositorios-item">
-      <div
-        class="row"
-        v-for="(repositorio, index) in paginationData"
-        :key="index"
-      >
-        <div class="col">{{ repositorio.name }}</div>
-        <div class="col">{{ repositorio.name }}</div>
-        <div class="col">{{ repositorio.name }}</div>
-        <div class="col">{{ repositorio.name }}</div>
-        <div class="col">{{ repositorio.name }}</div>
-        <div class="col">{{ repositorio.name }}</div>
-        <div class="col">{{ repositorio.name }}</div>
-      </div>
-    </div>
-    <ul class="pagination" v-if="data.length > 10 || currentPage > 1">
-      <li class="pagination-item" title="a">
-        <button
-          type="button"
-          @click="onClickFirstPage"
-          :disabled="isInFirstPage"
-        >
-          1
-        </button>
-      </li>
-      <li class="pagination-item" title="a">
-        <button
-          type="button"
-          @click="onClickPreviousPage"
-          :disabled="isInFirstPage"
-        >
-          1
-        </button>
-      </li>
-      <li
-        class="pagination-item"
-        title="a"
-        v-for="(page, index) in pages"
-        :key="index"
-      >
-        <button
-          type="button"
-          @click="onClickPage(page.number)"
-          :class="{ activo: isPageActive(page.number) }"
-        >
-          >
-          {{ page.number }}
-        </button>
-      </li>
-      <li class="pagination-item" title="a">
-        <button type="button" @click="onClickNextPage" :disabled="isInLastPage">
-          >last
-        </button>
-      </li>
-
-      <li class="pagination-item" title="a">
-        <button type="button" @click="onClickLastPage" :disabled="isInLastPage">
-          >last
-        </button>
-      </li>
-    </ul>
-  </div>
+ 
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+
 export default {
   name: "Pagination",
   props: {
